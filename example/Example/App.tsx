@@ -1,5 +1,3 @@
-// @flow
-import React, { Component, Fragment } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -9,42 +7,46 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  ParamListBase,
+  RouteProp,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import screens from "./src/screens";
+import screens, { type Screens } from "./src/screens";
 
-class HomeScreen extends Component {
-  static navigationOptions = {
-    title: "react-native-view-shot " + "4.0.0",
-  };
+type HomeScreenProps = {
+  route: RouteProp<ParamListBase, "Home2">;
+  navigation: any;
+};
 
-  render() {
-    // @ts-ignore
-    const { navigation } = this.props;
-    return (
-      <Fragment>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
-          <ScrollView>
-            {Object.keys(screens).map(key => (
-              <TouchableOpacity
-                key={key}
-                onPress={() => navigation.navigate(key)}
-              >
-                <View style={styles.entry}>
-                  <Text style={styles.entryText}>
-                    {(screens[key].screen.navigationOptions &&
-                      screens[key].screen.navigationOptions.title) ||
-                      key}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </SafeAreaView>
-      </Fragment>
-    );
-  }
+function HomeScreen({ navigation }: HomeScreenProps) {
+  return (
+    <>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <ScrollView>
+          {Object.keys(screens).map((key: any) => (
+            <TouchableOpacity
+              key={key as Screens}
+              onPress={() => navigation.navigate(key)}
+            >
+              <View style={styles.entry}>
+                <Text style={styles.entryText}>
+                  {screens[key as Screens].screen.navigationOptions.title ??
+                    key}
+                  {screens[key as unknown as Screens].screen.navigationOptions
+                    .title
+                    ? screens[key as Screens].screen.navigationOptions.title
+                    : key}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -64,9 +66,17 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        {Object.keys(screens).map(key => (
-          <Stack.Screen key={key} name={key} component={screens[key].screen} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "react-native-view-shot " + "4.0.0" }}
+        />
+        {Object.keys(screens).map((key: unknown) => (
+          <Stack.Screen
+            key={key as Screens}
+            name={key as Screens}
+            component={screens[key as Screens].screen}
+          />
         ))}
       </Stack.Navigator>
     </NavigationContainer>

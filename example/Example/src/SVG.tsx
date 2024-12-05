@@ -1,6 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-//@flow
-import React, { useState, useCallback } from "react";
+import * as React from "react";
 import { SafeAreaView, Image, View } from "react-native";
 import ViewShot from "react-native-view-shot";
 import { Svg, Path } from "react-native-svg";
@@ -9,8 +7,8 @@ import Desc from "./Desc";
 const dimension = { width: 300, height: 300 };
 
 const SVGExample = () => {
-  const [source, setSource] = useState(null);
-  const onCapture = useCallback(uri => setSource({ uri }), []);
+  const [source, setSource] = React.useState<{ uri: string } | null>(null);
+  const onCapture = React.useCallback((uri: string) => setSource({ uri }), []);
   return (
     <SafeAreaView>
       <ViewShot onCapture={onCapture} captureMode="mount" style={dimension}>
@@ -39,7 +37,7 @@ const SVGExample = () => {
 
       <Desc desc="ART overlapping test" />
 
-      <Image fadeDuration={0} source={source} style={dimension} />
+      <Image fadeDuration={0} source={{ uri: source?.uri }} style={dimension} />
     </SafeAreaView>
   );
 };

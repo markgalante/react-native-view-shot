@@ -45,3 +45,5 @@ captures/
 .project
 
 .yarn
+
+dist

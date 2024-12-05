@@ -1,5 +1,4 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, { Fragment, useState, useRef, useCallback } from "react";
+import * as React from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,15 +10,16 @@ import {
   StatusBar,
   Image,
 } from "react-native";
+import _ from "lodash";
 import { Picker } from "@react-native-picker/picker";
 import { Buffer } from "buffer";
 import Slider from "@react-native-community/slider";
-import omit from "lodash/omit";
 import { captureRef, captureScreen } from "react-native-view-shot";
 import MapView from "react-native-maps";
 import WebView from "react-native-webview";
 import Video from "react-native-video";
 import { SvgUri } from "react-native-svg";
+
 import Btn from "./Btn";
 
 const catsSource = {
@@ -27,33 +27,45 @@ const catsSource = {
 };
 
 const App = () => {
-  const fullRef = useRef();
-  const headerRef = useRef();
-  const formRef = useRef();
-  const emptyRef = useRef();
-  const complexRef = useRef();
-  const svgRef = useRef();
-  const mapViewRef = useRef();
-  const webviewRef = useRef();
-  const videoRef = useRef();
-  const videoSurfaceRef = useRef();
-  const transformParentRef = useRef();
-  const transformRef = useRef();
-  const surfaceRef = useRef();
+  const fullRef = React.useRef();
+  const headerRef = React.useRef();
+  const formRef = React.useRef();
+  const emptyRef = React.useRef();
+  const complexRef = React.useRef();
+  const svgRef = React.useRef();
+  const mapViewRef = React.useRef();
+  const webviewRef = React.useRef();
+  const videoRef = React.useRef();
+  const videoSurfaceRef = React.useRef();
+  const transformParentRef = React.useRef();
+  const transformRef = React.useRef();
+  const surfaceRef = React.useRef();
 
-  const [previewSource, setPreviewSource] = useState(catsSource);
+  const [previewSource, setPreviewSource] = React.useState<{
+    uri: string;
+  } | null>(catsSource);
 
-  const [result, setResult] = useState({ error: null, res: null });
+  const [result, setResult] = React.useState<{ error: any; res: any }>({
+    error: null,
+    res: null,
+  });
 
-  const [config, setConfig] = useState({
+  const [config, setConfig] = React.useState<{
+    format: string;
+    quality: number;
+    result: string;
+    snapshotContentContainer: boolean;
+    width?: number;
+    height?: number;
+  }>({
     format: "png",
     quality: 0.9,
     result: "file",
     snapshotContentContainer: false,
   });
 
-  const onCapture = useCallback(
-    res => {
+  const onCapture = React.useCallback(
+    (res: any) => {
       if (config.result === "base64") {
         const b = Buffer.from(res, "base64");
         console.log("buffer of length " + b.length);
@@ -72,7 +84,7 @@ const App = () => {
     [config]
   );
 
-  const onCaptureFailure = useCallback(error => {
+  const onCaptureFailure = React.useCallback((error: any) => {
     console.warn(error);
     setPreviewSource(null);
     setResult({
@@ -81,9 +93,9 @@ const App = () => {
     });
   }, []);
 
-  const capture = useCallback(
-    (ref, options = {}) => {
-      const opts = { ...config, ...options };
+  const capture = React.useCallback(
+    (ref?: any, options = {}) => {
+      const opts = { ...config, ...options } as any;
       console.log({ opts });
       (ref ? captureRef(ref, opts) : captureScreen(opts))
         .then(res =>
@@ -100,15 +112,15 @@ const App = () => {
   );
 
   return (
-    <Fragment>
+    <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.root}>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          ref={fullRef}
+          ref={fullRef as any}
           contentContainerStyle={styles.container}
         >
-          <View ref={headerRef} style={styles.header}>
+          <View ref={headerRef as any} style={styles.header}>
             <Text style={styles.title}>😃 ViewShot Example 😜</Text>
             <View style={styles.p1}>
               <Text style={styles.text}>This is a </Text>
@@ -118,14 +130,14 @@ const App = () => {
             <View style={styles.preview}>
               {result.error ? (
                 <Text style={styles.previewError}>
-                  {"" + (result.error.message || result.error)}
+                  {"" + (result.error?.message || result.error)}
                 </Text>
               ) : (
                 <Image
                   fadeDuration={0}
                   resizeMode="contain"
                   style={styles.previewImage}
-                  source={previewSource}
+                  source={{ uri: previewSource?.uri }}
                 />
               )}
             </View>
@@ -134,7 +146,7 @@ const App = () => {
             </Text>
           </View>
 
-          <View ref={formRef} style={styles.form}>
+          <View ref={formRef as any} style={styles.form}>
             <View style={styles.btns}>
               <Btn
                 label="😻 Reset"
@@ -204,7 +216,7 @@ const App = () => {
                 value={config.width !== undefined}
                 onValueChange={checked =>
                   setConfig(
-                    omit(
+                    _.omit(
                       {
                         ...config,
                         width: 300,
@@ -220,8 +232,8 @@ const App = () => {
                   style={styles.inputText}
                   value={"" + config.width}
                   keyboardType="number-pad"
-                  onChangeText={txt =>
-                    !isNaN(txt) &&
+                  onChangeText={(txt: string) =>
+                    !isNaN(Number(txt)) &&
                     setConfig({ ...config, width: parseInt(txt, 10) })
                   }
                 />
@@ -235,7 +247,7 @@ const App = () => {
                   value={"" + config.height}
                   keyboardType="number-pad"
                   onChangeText={txt =>
-                    !isNaN(txt) &&
+                    !isNaN(Number(txt)) &&
                     setConfig({ ...config, height: parseInt(txt, 10) })
                   }
                 />
@@ -271,14 +283,14 @@ const App = () => {
               />
             </View>
           </View>
-          <View ref={emptyRef} collapsable={false} />
+          <View ref={emptyRef as any} collapsable={false} />
           <View
             style={styles.experimental}
-            ref={complexRef}
+            ref={complexRef as any}
             collapsable={false}
           >
             <Text style={styles.experimentalTitle}>Experimental Stuff</Text>
-            <View ref={svgRef} collapsable={false}>
+            <View ref={svgRef as any} collapsable={false}>
               <SvgUri
                 width={200}
                 height={200}
@@ -286,7 +298,7 @@ const App = () => {
               />
             </View>
             <MapView
-              ref={mapViewRef}
+              ref={mapViewRef as any}
               initialRegion={{
                 latitude: 37.78825,
                 longitude: -122.4324,
@@ -296,7 +308,7 @@ const App = () => {
               style={{ width: 300, height: 300 }}
             />
             <View
-              ref={webviewRef}
+              ref={webviewRef as any}
               collapsable={false}
               style={{ width: 300, height: 300 }}
             >
@@ -307,7 +319,7 @@ const App = () => {
               />
             </View>
             <Video
-              ref={videoRef}
+              ref={videoRef as any}
               disableFocus // NOTE: https://github.com/react-native-video/react-native-video/issues/2666
               style={{ width: 300, height: 300 }}
               source={require("./broadchurch.mp4")}
@@ -315,7 +327,7 @@ const App = () => {
               repeat
             />
             <Video
-              ref={videoSurfaceRef}
+              ref={videoSurfaceRef as any}
               disableFocus // NOTE: https://github.com/react-native-video/react-native-video/issues/2666
               style={{ width: 300, height: 300 }}
               source={require("./broadchurch.mp4")}
@@ -326,7 +338,7 @@ const App = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </Fragment>
+    </>
   );
 };
 

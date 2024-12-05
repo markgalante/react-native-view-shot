@@ -8,8 +8,8 @@ import Desc from "./Desc";
 const dimension = { width: 300, height: 300 };
 
 const SvgUriExample = () => {
-  const [source, setSource] = useState(null);
-  const onCapture = useCallback(uri => setSource({ uri }), []);
+  const [source, setSource] = useState<{ uri: string } | null>(null);
+  const onCapture = useCallback((uri: string) => setSource({ uri }), []);
   return (
     <SafeAreaView>
       <ViewShot
@@ -26,7 +26,7 @@ const SvgUriExample = () => {
 
       <Desc desc="above is an SVG view and below is a continuous screenshot of it" />
 
-      <Image fadeDuration={0} source={source} style={dimension} />
+      <Image fadeDuration={0} source={{ uri: source?.uri }} style={dimension} />
     </SafeAreaView>
   );
 };

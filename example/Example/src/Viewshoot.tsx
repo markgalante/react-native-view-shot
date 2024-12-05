@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react';
+import * as React from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,18 +7,20 @@ import {
   Image,
   SafeAreaView,
   RefreshControl,
-} from 'react-native';
-import ViewShot from 'react-native-view-shot';
-import Btn from './Btn';
+} from "react-native";
+import ViewShot, { captureRef } from "react-native-view-shot";
+import Btn from "./Btn";
 
 const Viewshoot = () => {
-  const full = useRef();
-  const [preview, setPreview] = useState(null);
-  const [itemsCount, setItemsCount] = useState(10);
-  const [refreshing, setRefreshing] = useState(false);
+  const full = React.useRef<View>(null);
+  const [preview, setPreview] = React.useState<{ uri: string } | null>(null);
+  const [itemsCount, setItemsCount] = React.useState(10);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const onCapture = useCallback(() => {
-    full.current.capture().then(uri => setPreview({ uri }));
+  const onCapture = React.useCallback(() => {
+    if (full.current) {
+      captureRef(full.current).then((uri: string) => setPreview({ uri }));
+    }
   }, []);
 
   return (
@@ -46,7 +48,7 @@ const Viewshoot = () => {
             fadeDuration={0}
             resizeMode="contain"
             style={styles.previewImage}
-            source={preview}
+            source={{ uri: preview?.uri }}
           />
 
           {Array(itemsCount)
@@ -58,7 +60,10 @@ const Viewshoot = () => {
             }))
             .map(({ key, text, color }) => {
               return (
-                <View style={[styles.item, { backgroundColor: color }]} key={key}>
+                <View
+                  style={[styles.item, { backgroundColor: color }]}
+                  key={key}
+                >
                   <Text style={styles.itemText}>{text}</Text>
                 </View>
               );
@@ -72,31 +77,31 @@ const Viewshoot = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   root: {
     paddingVertical: 20,
   },
   content: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   item: {
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   itemText: {
     fontSize: 22,
-    color: '#666',
+    color: "#666",
   },
   previewImage: {
     height: 200,
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
 });
 
-Viewshoot.navigationProps = {
-  title: 'Viewshoot',
+Viewshoot.navigationOptions = {
+  title: "Viewshoot",
 };
 
 export default Viewshoot;

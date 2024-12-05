@@ -1,9 +1,15 @@
-//@flow
-import React, { Fragment, useState, useCallback, useRef } from 'react';
-import { StyleSheet, View, SafeAreaView, Text, Image, Modal } from 'react-native';
-import { captureScreen, captureRef } from 'react-native-view-shot';
-import Btn from './Btn';
-import Desc from './Desc';
+import * as React from "react";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  Image,
+  Modal,
+} from "react-native";
+import { captureScreen, captureRef } from "react-native-view-shot";
+import Btn from "./Btn";
+import Desc from "./Desc";
 
 const styles = StyleSheet.create({
   root: {
@@ -14,40 +20,40 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderWidth: 1,
-    borderColor: '#aaa',
+    borderColor: "#aaa",
   },
   modal: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     padding: 20,
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
   },
   buttons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
 
 const ModalExample = () => {
-  const [opened, setOpened] = useState(false);
-  const [source, setSource] = useState(null);
-  const modalRef = useRef();
+  const [opened, setOpened] = React.useState(false);
+  const [source, setSource] = React.useState<{ uri: string }>();
+  const modalRef = React.useRef<View>(null);
 
-  const onOpenModal = useCallback(() => setOpened(true), []);
+  const onOpenModal = React.useCallback(() => setOpened(true), []);
 
-  const onCapture = useCallback(uri => {
+  const onCapture = React.useCallback((uri: string) => {
     setSource({ uri });
     setOpened(false);
   }, []);
 
-  const onPressCapture = useCallback(() => {
+  const onPressCapture = React.useCallback(() => {
     captureScreen().then(onCapture);
   }, [onCapture]);
 
-  const onPressCaptureModalContent = useCallback(() => {
+  const onPressCaptureModalContent = React.useCallback(() => {
     captureRef(modalRef).then(onCapture);
   }, [onCapture]);
 
   return (
-    <Fragment>
+    <>
       <SafeAreaView>
         <View style={styles.root}>
           <Desc
@@ -55,7 +61,12 @@ const ModalExample = () => {
             screenshot Modal as part of a captureScreen."
           />
           <Btn onPress={onOpenModal} label="Open Modal" />
-          <Image fadeDuration={0} source={source} style={styles.preview} resizeMode="contain" />
+          <Image
+            fadeDuration={0}
+            source={source}
+            style={styles.preview}
+            resizeMode="contain"
+          />
         </View>
       </SafeAreaView>
 
@@ -70,12 +81,12 @@ const ModalExample = () => {
           </View>
         </SafeAreaView>
       </Modal>
-    </Fragment>
+    </>
   );
 };
 
 ModalExample.navigationOptions = {
-  title: 'Modal',
+  title: "Modal",
 };
 
 export default ModalExample;

@@ -4,7 +4,7 @@ import TransparencyScreen from "./Transparency";
 import VideoScreen from "./Video";
 import WebViewScreen from "./WebView";
 import MapViewScreen from "./MapView";
-import CanvasScreen from "./Canvas";
+// import CanvasScreen from "./Canvas";
 // import GLReactV2Screen from './GLReactV2';
 import SVGUriScreen from "./SVGUri";
 import SVGScreen from "./SVG";
@@ -27,5 +27,7 @@ const screens = {
   Modal: { screen: ModalScreen },
   Image: { screen: ImageScreen },
 };
+
+export type Screens = keyof typeof screens;
 
 export default screens;

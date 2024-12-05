@@ -2,8 +2,8 @@
   "name": "react-native-view-shot",
   "version": "4.0.2",
   "description": "Capture a React Native view to an image",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "react-native",
     "screenshot",
@@ -12,6 +12,9 @@
     "snapshot",
     "rasterize"
   ],
+  "scripts": {
+    "build": "tsc"
+  },
   "author": "Gaëtan Renaudeau <renaudeau.gaetan@gmail.com>",
   "homepage": "https://github.com/gre/react-native-view-shot",
   "license": "MIT",
@@ -23,13 +26,16 @@
     "html2canvas": "^1.4.1"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": "^18.2.0",
+    "react-native": "0.74.5"
   },
   "devDependencies": {
+    "@types/react": "^18.3.13",
+    "@types/react-native": "^0.73.0",
     "flow-bin": "^0.246.0",
     "html-webpack-plugin": "^5.5.1",
-    "react-native-windows": "^0.63.16"
+    "react-native-windows": "^0.76.2",
+    "typescript": "^5.7.2"
   },
   "codegenConfig": {
     "name": "rnviewshot",
